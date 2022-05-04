@@ -17,3 +17,15 @@ jobs:
           command: |
             docker-compose up -d
             docker-compose run dockerapp python test.py
+      - deploy:
+          name: Push application Docker images
+          command:
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+
+            docker tag dockerapp_dockerapp $DOCKER_USER/dockerapp:$CIRCLE_SHA1
+
+            docker tag dockerapp_dockerapp $DOCKER_USER/dockerapp:latest
+
+            docker push $DOCKER_USER/dockerapp:$CIRCLE_SHA1
+
+            docker push $DOCKER_USER/dockerapp:latest 
